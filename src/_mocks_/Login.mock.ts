@@ -1,8 +1,8 @@
-export const LoginFormMock ={
+export const LoginMock ={
     name: 'Admin',
     password:'Test123$'
 }
-export const LoginFormMockError ={
+export const LoginMockError ={
     name: 'hsfiodhoisdjfiojsoi',
     password:'Test123'
 }
