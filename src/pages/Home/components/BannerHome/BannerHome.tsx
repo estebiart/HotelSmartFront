@@ -1,9 +1,7 @@
 "use client";
 import React from 'react';
 import styled from 'styled-components';
-
 export type BannerHomeProps = {
-	// types...
 }
 
 const BannerHome: React.FC<BannerHomeProps>  = ({}) => {

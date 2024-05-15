@@ -1,7 +1,6 @@
 "use client";
 import { AppBar, Box, Button, Toolbar, Typography } from '@mui/material';
 import React from 'react';
-import { CustomDialog } from '../CustomDialog';
 import { dialogOpenSubject$ } from '../CustomDialog/CustomDialog';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
@@ -9,7 +8,6 @@ import IconButton from '@mui/material/IconButton';
 import SearchIcon from '@mui/icons-material/Search';
 import MoreIcon from '@mui/icons-material/MoreVert';
 import MenuIcon from '@mui/icons-material/Menu';
-import AddIcon from '@mui/icons-material/Add';
 import { styled } from '@mui/material/styles';
 import Fab from '@mui/material/Fab';
 import { Link } from "react-router-dom";
@@ -38,24 +36,24 @@ const Navbar: React.FC<NavbarProps>  = ({layoutType}) => {
 	const handleClick = () =>{
 		dialogOpenSubject$.setSubject = true;
 	}
-	async function handleSignOut(e: MouseEvent) {
-		e.preventDefault();
+	async function handleSignOut(event: React.MouseEvent<HTMLButtonElement>) {
+		event.preventDefault();
 	
 		try {
-		  const response = await fetch(`${API_URL}/signout`, {
-			method: "DELETE",
-			headers: {
-			  "Content-Type": "application/json",
-			  Authorization: `Bearer ${auth.getRefreshToken()}`,
-			},
-		  });
-		  if (response.ok) {
-			auth.signout();
-		  }
+			const response = await fetch(`${API_URL}/signout`, {
+				method: "DELETE",
+				headers: {
+					"Content-Type": "application/json",
+					Authorization: `Bearer ${auth.getRefreshToken()}`,
+				},
+			});
+			if (response.ok) {
+				auth.signout();
+			}
 		} catch (error) {
-		  console.log(error);
+			console.log(error);
 		}
-	  }
+	}
 	return (
 	<Box sx={{ flexGrow: 1 }}>
 	

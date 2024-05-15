@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import  { useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { LoginFormSchema } from './schemas/login-form-schema';
 import { CustomInput } from '../../components/CustomInput';
 import { CustomButton } from '../../components/CustomButton';
 import { Box } from '@mui/material';
-import { AuthResponse, AuthResponseError } from '../../models/types';
+import { AuthResponse } from '../../models/types';
 import { useAuth } from '../../context/AuthProvider';
 import { Navigate } from 'react-router-dom';
 import { callEndpoint } from './services/call-endpoint';
@@ -13,13 +13,11 @@ import Layout from '../../layouts/Layout';
 import styled from 'styled-components';
 
 export function Login() {
-  const [submitted, setSubmitted] = React.useState(false);
   const [errorResponse, setErrorResponse] = useState('');
 
   const {
     register,
     handleSubmit,
-    watch,
     formState: { errors, isDirty, isValid },
     reset
   } = useForm({

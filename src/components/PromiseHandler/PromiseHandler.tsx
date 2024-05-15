@@ -1,10 +1,15 @@
-"use client";
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect, ReactNode, SetStateAction } from 'react';
 
-const PromiseHandler = ({ promise, children }) => {
-  const [data, setData] = useState(null);
-  const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(true);
+type PromiseFunction<T> = () => Promise<T>;
+type PromiseHandlerProps<T> = {
+  promise: PromiseFunction<T>;
+  children: (data: T) => ReactNode;
+};
+
+const PromiseHandler = <T,>({ promise, children }: PromiseHandlerProps<T>) => {
+  const [data, setData] = useState<T | null>(null); 
+  const [error, setError] = useState<any>(null); 
+  const [loading, setLoading] = useState<boolean>(true); 
 
   useEffect(() => {
     const fetchData = async () => {
@@ -12,7 +17,7 @@ const PromiseHandler = ({ promise, children }) => {
         const result = await promise();
         setData(result);
       } catch (error) {
-        setError(error);
+        setError(error); 
       } finally {
         setLoading(false);
       }
@@ -26,11 +31,10 @@ const PromiseHandler = ({ promise, children }) => {
   }
 
   if (error) {
-    return <div>Error: {error.message}</div>;
+    return <div>Error: {error.message}</div>; 
   }
 
-  return children(data);
+  return children(data as T); 
 };
 
 export default PromiseHandler;
-

@@ -1,4 +1,5 @@
-import type { Meta, StoryObj } from "@storybook/react"
+import type { Meta } from "@storybook/react"
+// import type { Meta, StoryObj } from "@storybook/react"
 import CustomButton from "./CustomButton"
 
 const meta = {
@@ -13,6 +14,6 @@ const meta = {
 
 export default meta;
 
-type Story = StoryObj<typeof CustomButton>;
+// type Story = StoryObj<typeof CustomButton>;
 
 

@@ -14,7 +14,7 @@ import ShareIcon from '@mui/icons-material/Share';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 
 export type HotelCardProps = {
-    hotel: any; // Tipo de la información del hotel
+    hotel: any; 
 }
 
 const HotelCard: React.FC<HotelCardProps> = ({ hotel }) => {
@@ -62,7 +62,7 @@ const HotelCard: React.FC<HotelCardProps> = ({ hotel }) => {
 };
 
 export const HotelCardStl = styled.div`
-    /* Agrega estilos según sea necesario */
+
 `;
 
 export default HotelCard;

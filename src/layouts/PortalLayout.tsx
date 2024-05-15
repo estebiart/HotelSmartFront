@@ -1,5 +1,4 @@
-import { Link } from "react-router-dom";
-import React, { MouseEvent } from "react";
+import React from "react";
 import { Navbar } from "../components";
 import { Footer } from "../components/Footer";
 

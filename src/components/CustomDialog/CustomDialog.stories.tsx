@@ -17,6 +17,6 @@ type Story = StoryObj<typeof CustomDialog>;
 
 export const Default = {
     args: {
-        // props
+       
     },
 } satisfies Story;

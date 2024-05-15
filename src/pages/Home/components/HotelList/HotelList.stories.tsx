@@ -17,6 +17,5 @@ type Story = StoryObj<typeof HotelList>;
 
 export const Default = {
     args: {
-        // props
     },
 } satisfies Story;

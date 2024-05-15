@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { Pagination, TextField, Button } from '@mui/material';
+import { Pagination, TextField } from '@mui/material';
 import { callEndpoint } from './services/hotels-list-endpoint';
 import { HotelCard } from '../HotelCard';
 import SearchIcon from '@mui/icons-material/Search';
 import { styled as styledMui, alpha } from '@mui/material/styles';
 
 export type HotelListProps = {
-    // types...
+
 }
 
 const HotelList: React.FC<HotelListProps> = ({}) => {
@@ -27,17 +27,14 @@ const HotelList: React.FC<HotelListProps> = ({}) => {
         fetchData();
     }, []);
 
-    // Función para filtrar hoteles según el valor de búsqueda
     const handleSearch = (value: string) => {
         setFilter(value);
     };
 
-    // Filtra los hoteles según el valor de búsqueda
     const filteredHotels = hotels.filter((hotel) =>
         hotel.name.toLowerCase().includes(filter.toLowerCase())
     );
 
-    // Calcula los hoteles a mostrar en la página actual
     const hotelsPerPage = 8;
     const indexOfLastHotel = page * hotelsPerPage;
     const indexOfFirstHotel = indexOfLastHotel - hotelsPerPage;

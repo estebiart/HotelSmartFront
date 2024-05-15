@@ -17,6 +17,5 @@ type Story = StoryObj<typeof BannerHome>;
 
 export const Default = {
     args: {
-        // props
     },
 } satisfies Story;

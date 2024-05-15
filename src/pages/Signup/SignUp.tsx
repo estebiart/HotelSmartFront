@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import  { useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import Layout from "../../layouts/Layout";
-import { Navigate, useNavigate } from "react-router-dom";
-import { AuthResponse, AuthResponseError } from "../../models/types";
+import {  useNavigate } from "react-router-dom";
+import { AuthResponse } from "../../models/types";
 import { useAuth } from "../../context/AuthProvider";
 import { CustomButton, CustomInput } from "../../components";
 import styled from 'styled-components';
@@ -30,8 +30,12 @@ export default function Signup() {
     mode: "onChange",
     resolver: yupResolver(SignUpFormSchema), 
   });
-
-  async function onSubmit(data) {
+  interface FormData {
+    name: string;
+    username: string;
+    password: string;
+  }
+  async function onSubmit(data: FormData) {
     try {
       const result = await callEndpoint(data); 
       if (result) {

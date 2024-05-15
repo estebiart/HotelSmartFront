@@ -1,7 +1,5 @@
-import { useEffect, useState } from "react";
 import PortalLayout from "../../layouts/PortalLayout";
 import { useAuth } from "../../context/AuthProvider";
-import API_URL  from "../../context/authConstants";
 import { CreateHotel } from "./components/CreateHotel";
 import { UpdateHotel } from "./components/UpdateHotel";
 import { BookingList } from "./components/BookingList";

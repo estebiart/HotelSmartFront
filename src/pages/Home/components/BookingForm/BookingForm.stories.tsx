@@ -17,6 +17,5 @@ type Story = StoryObj<typeof BookingForm>;
 
 export const Default = {
     args: {
-        // props
     },
 } satisfies Story;

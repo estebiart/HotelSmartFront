@@ -17,6 +17,5 @@ type Story = StoryObj<typeof Navbar>;
 
 export const Default = {
     args: {
-        // props
     },
 } satisfies Story;
