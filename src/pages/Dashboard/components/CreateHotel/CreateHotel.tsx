@@ -17,8 +17,10 @@ export type CreateHotelProps = {
 
 const CreateHotel: React.FC<CreateHotelProps> = ({}) => {
     const [errorResponse, setErrorResponse] = useState("");
+    const [successMessage, setSuccessMessage] = useState("");
     const [selectedFiles, setSelectedFiles] = useState<FileList | null>(null);
     const [rooms, setRooms] = useState<any[]>([]);
+    const [formSubmitted, setFormSubmitted] = useState(false);
 
     const {
         register,
@@ -80,6 +82,8 @@ const CreateHotel: React.FC<CreateHotelProps> = ({}) => {
               const hotelId = result._id; 
               const result2 = await addRoomsToHotel(hotelId, rooms, accessToken)
               if (result2) {
+                setSuccessMessage('Hotel creado con éxito');
+                setFormSubmitted(true);
                 } else {
                     setErrorResponse('Error al llamar al endpoint');
                 }
@@ -104,7 +108,7 @@ const CreateHotel: React.FC<CreateHotelProps> = ({}) => {
                 }}
             >
                 <FormProvider {...{ register, errors }}>
-                    <form onSubmit={handleSubmit(onSubmit)} className="form" encType="multipart/form-data">
+                    <form onSubmit={handleSubmit(onSubmit)} className={`form ${formSubmitted ? 'hidden' : ''}`}  encType="multipart/form-data">
                         <h2>Registro de nuevo Hotel</h2>
                         {!!errorResponse && (
                             <div className="errorMessage">{errorResponse}</div>
@@ -181,11 +185,17 @@ const CreateHotel: React.FC<CreateHotelProps> = ({}) => {
                         </CustomButton>
                     </form>
                 </FormProvider>
+                {formSubmitted && (
+                    <div className="successMessage">{successMessage}</div>
+                )}
             </Box>
         </CreateHotelStl>
     );
 };
 
-export const CreateHotelStl = styled.div``;
+export const CreateHotelStl = styled.div`
+display: flex;
+justify-content: center;
+margin: 30px;`;
 
 export default CreateHotel;

@@ -48,7 +48,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
     accessToken: string,
     refreshToken: string
   ) {
-    console.log("setAccessTokenAndRefreshToken", accessToken, refreshToken);
     setAccessToken(accessToken);
     setRefreshToken(refreshToken);
 
@@ -98,7 +97,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
       } else {
         const token = localStorage.getItem("token");
         if (token) {
-          console.log("useEffect: token", token);
           const refreshToken = JSON.parse(token).refreshToken;
           getNewAccessToken(refreshToken)
             .then(async (newToken) => {

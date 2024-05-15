@@ -1,18 +1,19 @@
-// Hotel interface
+
 export interface Hotel {
-    _id: string; // MongoDB id
+    _id: string; 
     name: string;
-    images: string[]; // Array of image URLs
+    images: string[]; 
     place: string;
     address: string;
     description: string;
-    rooms: Room[]; // Array of Room objects
+    rooms: Room[];
+
 }
 
-// Room interface
+
 export interface Room {
-    _id: string; // MongoDB id
-    hotel: string; // Reference to Hotel object id
+    _id: string; 
+    hotel: string; 
     roomType: string;
     price: number;
     capacity: number;

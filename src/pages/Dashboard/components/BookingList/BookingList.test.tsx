@@ -1,10 +1,10 @@
 import React from 'react';
 import { render } from '@testing-library/react';
-import Search from './Search';
+import BookingList from './BookingList';
 
-describe('Search', () => {
+describe('BookingList', () => {
     it('should render successfully', () => {
-        const { baseElement } = render(<Search />);
+        const { baseElement } = render(<BookingList />);
 
         expect(baseElement).toBeTruthy();
     });

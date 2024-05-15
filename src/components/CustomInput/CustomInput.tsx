@@ -8,7 +8,6 @@ const fromValidation = ( errors, errorKey) => {
 }
 
 export const CustomInput = ({name ='',label ='', type = 'text', disabled =false, required= false, multiple = false,defaultValue = ''}) =>{
-	console.log("defaultValue",defaultValue);
 	
 	const {register, errors } = useFormContext(); 
 	return (

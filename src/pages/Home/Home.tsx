@@ -6,7 +6,6 @@ import { useDispatch } from 'react-redux';
 import Layout from '../../layouts/Layout';
 import { LayoutContainer } from '../../styled-components';
 import { BannerHome } from './components/BannerHome';
-import { Search } from './components/Search';
 import { HotelList } from './components/HotelList';
 import { BookingForm } from './components/BookingForm';
 
@@ -26,7 +25,6 @@ const Home: React.FC<HomeProps>  = () => {
 			<BannerHome/>
 			<LayoutContainer>  
 				<div style={{ width: '100%' }}>
-					<Search/>
 					<HotelList/>
 					<BookingForm/>
 				</div>

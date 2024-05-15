@@ -1,19 +1,19 @@
 import type { Meta, StoryObj } from "@storybook/react"
-import Search from "./Search"
+import BookingList from "./BookingList"
 
 const meta = {
-    title: 'Search',
-    component: Search,
+    title: 'BookingList',
+    component: BookingList,
     tags: ['autodocs'],
 	parameters: {
 		layout: 'fullscreen',
 	},
 	argTypes: {},
-} satisfies Meta<typeof Search>;
+} satisfies Meta<typeof BookingList>;
 
 export default meta;
 
-type Story = StoryObj<typeof Search>;
+type Story = StoryObj<typeof BookingList>;
 
 export const Default = {
     args: {

@@ -8,6 +8,7 @@ import { useAuth } from '../../../../context/AuthProvider';
 import { callEndpoint, getHotels, getRoomsByHotel  } from './services/booking-endpoint';
 import { Hotel } from '../../../../models';
 import Autocomplete from '@mui/material/Autocomplete';
+// import transporter from './services/mailer';
 
 
 type Room = {
@@ -26,9 +27,12 @@ type BookingFormData = {
     number: string;
     asociateName: string;
     asociateNumber: string;
-    // Assuming you also want to associate a hotel and rooms with the booking
-    hotel: string; // ID of the selected hotel
-    rooms: string[]; // IDs of selected rooms
+    hotel: string; 
+    rooms: string[]; 
+	checkInDate: string; 
+    checkOutDate: string; 
+    numberOfPeople: number; 
+    destinationCity: string; 
 }
 
 const BookingForm: React.FC = () => {
@@ -53,8 +57,12 @@ const BookingForm: React.FC = () => {
             number: '',
             asociateName: '',
             asociateNumber: '',
-            hotel: '', // Initialize with an empty string
-            rooms: [] // Initialize with an empty array
+            hotel: '', 
+            rooms: [],
+			checkInDate: '',
+			checkOutDate: '',
+			numberOfPeople: 0,
+			destinationCity: '', 
         },
         mode: 'onChange'
     });
@@ -62,7 +70,7 @@ const BookingForm: React.FC = () => {
     const auth = useAuth();
     const accessToken= auth.getAccessToken();
 	useEffect(() => {
-        // Cargar hoteles al montar el componente
+        
         loadHotels();
     }, []);
 
@@ -90,6 +98,20 @@ const BookingForm: React.FC = () => {
         }
     };
 	
+	// const sendEmailNotification = async (email: string, message: string) => {
+	// 	try {
+	// 		await transporter.sendMail({
+	// 			from: 'test@gmail.com',
+	// 			to: email,
+	// 			subject: 'Notificación de reserva de hotel',
+	// 			text: message
+	// 		});
+	// 		console.log(`Email sent to ${email}: ${message}`);
+	// 	} catch (error) {
+	// 		console.error('Error sending email:', error);
+	// 		throw new Error('Error sending email');
+	// 	}
+	// };
 	
 
     const onSubmit = async (data: BookingFormData) => {
@@ -103,7 +125,7 @@ const BookingForm: React.FC = () => {
 	
 
             if (result) {
-                // Handle success response
+                // sendEmailNotification(data.email, 'Reserva realizada exitosamente');
             } else {
                 setErrorResponse('Error al llamar al endpoint');
             }
@@ -111,7 +133,7 @@ const BookingForm: React.FC = () => {
             setErrorResponse('Ha ocurrido un error al realizar la reserva');
             console.error('Error en la llamada a la API:', error);
         }
-        reset(); // Reset form fields after submission
+        reset(); 
     };
 
 	return (
@@ -130,8 +152,31 @@ const BookingForm: React.FC = () => {
 						{!!errorResponse && (
 							<div className="errorMessage">{errorResponse}</div>
 						)}
-	
-						{/* Nombres */}
+						<CustomInput
+						name="checkInDate"
+						label="Fecha de Entrada al Alojamiento"
+						type="date"
+						required
+						/>
+						<CustomInput
+							name="checkOutDate"
+							label="Fecha de Salida del Alojamiento"
+							type="date"
+							required
+						/>
+						<CustomInput
+							name="numberOfPeople"
+							label="Cantidad de Personas que se Alojarán"
+							type="number"
+							required
+						/>
+						<CustomInput
+							name="destinationCity"
+							label="Ciudad de Destino"
+							type="text"
+							required
+						/>
+		
 						<CustomInput
 							name="names"
 							label="Nombres"
@@ -139,7 +184,7 @@ const BookingForm: React.FC = () => {
 							required
 						/>
 	
-						{/* Apellidos */}
+				
 						<CustomInput
 							name="lastnames"
 							label="Apellidos"
@@ -147,7 +192,7 @@ const BookingForm: React.FC = () => {
 							required
 						/>
 	
-						{/* Género */}
+		
 						<CustomInput
 							name="gender"
 							label="Género"
@@ -155,15 +200,15 @@ const BookingForm: React.FC = () => {
 							required
 						/>
 
-						{/* Género */}
+			
+						<label>fecha de nacimiento</label>
 						<CustomInput
 							name="birthdate"
-							label="fecha de nacimiento"
+							label=""
 							type="date"
 							required
 						/>
-	
-						{/* Tipo de Documento */}
+
 						<CustomInput
 							name="documentType"
 							label="Tipo de Documento"
@@ -171,7 +216,7 @@ const BookingForm: React.FC = () => {
 							required
 						/>
 	
-						{/* Número de Documento */}
+
 						<CustomInput
 							name="documentNumber"
 							label="Número de Documento"
@@ -179,7 +224,7 @@ const BookingForm: React.FC = () => {
 							required
 						/>
 	
-						{/* Correo Electrónico */}
+
 						<CustomInput
 							name="email"
 							label="Correo Electrónico"
@@ -187,7 +232,7 @@ const BookingForm: React.FC = () => {
 							required
 						/>
 	
-						{/* Número de Teléfono */}
+
 						<CustomInput
 							name="number"
 							label="Número de Teléfono"
@@ -195,7 +240,7 @@ const BookingForm: React.FC = () => {
 							required
 						/>
 	
-						{/* Nombre del Asociado */}
+
 						<CustomInput
 							name="asociateName"
 							label="Nombre del Asociado"
@@ -203,7 +248,7 @@ const BookingForm: React.FC = () => {
 							required
 						/>
 	
-						{/* Número del Asociado */}
+
 						<CustomInput
 							name="asociateNumber"
 							label="Número del Asociado"
@@ -211,33 +256,31 @@ const BookingForm: React.FC = () => {
 							required
 						/>
 	
-                        {/* Selector de hotel */}
-                        <FormControl fullWidth>
-                            <InputLabel id="hotel-label">Hotel</InputLabel>
-                            <Select
-                                labelId="hotel-label"
-                                id="hotel"
-                                value={selectedHotel}
-                                onChange={handleHotelChange}
-                            >
-                                {hotels.map((hotel) => (
-                                    <MenuItem key={hotel._id} value={hotel._id}>{hotel.name}</MenuItem>
-                                ))}
-                            </Select>
-                        </FormControl>
-
-
-	                        {/* Room Selector */}
+						<div className='BookingForm'>
 							<FormControl fullWidth>
-                            <InputLabel id="room-label">Room</InputLabel>
-                            <Autocomplete
-                                id="room"
-                                options={rooms.map((room) => room.roomType)}
-                                value={selectedRoom}
-                                onChange={(event, newValue) => setSelectedRoom(newValue as string)}
-                                renderInput={(params) => <TextField {...params} label="Room" />}
-                            />
-                        </FormControl>
+							<InputLabel id="hotel-label">Hotel</InputLabel>
+							<Select
+								labelId="hotel-label"
+								id="hotel"
+								value={selectedHotel}
+								onChange={handleHotelChange}
+							>
+								{hotels.map((hotel) => (
+									<MenuItem key={hotel._id} value={hotel._id}>{hotel.name}</MenuItem>
+								))}
+							</Select>
+							</FormControl>
+							<FormControl fullWidth>
+							<Autocomplete
+								id="room"
+								options={rooms.map((room) => room.roomType)}
+								value={selectedRoom}
+								onChange={(event, newValue) => setSelectedRoom(newValue as string)}
+								renderInput={(params) => <TextField {...params} label="Room" />}
+							/>
+							</FormControl>							
+						</div>
+
 						<CustomButton
 							isDirty={isDirty}
 							isValid={isValid}
@@ -253,6 +296,17 @@ const BookingForm: React.FC = () => {
 	
 };
 
-export const BookingFormWrapper = styled.div``;
+export const BookingFormWrapper = styled.div`
+display: flex;
+align-items: center;
+justify-content: center;
+margin:20px;
+ .BookingForm{
+	display: flex;
+    flex-direction: column;
+    gap: 30px;
+    margin: 30px 0px;
+ }
+`;
 
 export default BookingForm;

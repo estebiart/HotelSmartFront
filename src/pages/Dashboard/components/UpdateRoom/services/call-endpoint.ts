@@ -5,13 +5,14 @@ import API_URL from '../../../../../context/authConstants';
 export const getHotels = async () => {
   try {
       const response = await axios.get(`${API_URL}/hotels`); 
+
       return response.data;
   } catch (error) {
       throw new Error('Error al obtener la lista de hoteles');
   }
 };
 
-// Función para obtener las habitaciones de un hotel específico
+
 export const getRoomsByHotel = async (hotelId: string) => {
   try {
       const response = await axios.get(`${API_URL}/hotels/${hotelId}/rooms`); 
@@ -30,17 +31,32 @@ export const getHotelInfoById = async (hotelId: string) => {
   }
 };
 
-export const updateHotel = async (hotelId: string, data: any, token: any) => {
+
+
+
+export async function getRoomsForHotel(hotelId) {
+    try {
+      console.log("hotelId",hotelId);
+        const response = await axios.get(`${API_URL}/hotels/${hotelId}/rooms`);
+        console.log("resopnses",response);
+        return response.data;
+    } catch (error) {
+        console.error('Error al obtener las habitaciones del hotel:', error);
+        throw error;
+    }
+}
+
+export async function updateRoom(hotelId, roomId, updatedRoomInfo, token) {
   try {
-    const response = await axios.put(`${API_URL}/hotels/${hotelId}`, data, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json',
-      }
-    });
-    return response.data;
+      const response = await axios.put(`${API_URL}/hotels/${hotelId}/rooms/${roomId}`, updatedRoomInfo, {
+          headers: {
+              Authorization: `Bearer ${token}`,
+              'Content-Type': 'application/json',
+          },
+      });
+      return response.data;
   } catch (error) {
-    console.error('Error al actualizar el hotel:', error);
-    throw error; 
+      console.error('Error updating room:', error);
+      throw error;
   }
-};
+}

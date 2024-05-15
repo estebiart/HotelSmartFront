@@ -4,6 +4,8 @@ import { useAuth } from "../../context/AuthProvider";
 import API_URL  from "../../context/authConstants";
 import { CreateHotel } from "./components/CreateHotel";
 import { UpdateHotel } from "./components/UpdateHotel";
+import { BookingList } from "./components/BookingList";
+import { UpdateRoom } from "./components/UpdateRoom";
 
 
 
@@ -17,6 +19,8 @@ export default function Dashboard() {
         </div>
         <CreateHotel/>
         <UpdateHotel/>
+        <UpdateRoom/>
+        <BookingList/>
     </PortalLayout>
   );
 }

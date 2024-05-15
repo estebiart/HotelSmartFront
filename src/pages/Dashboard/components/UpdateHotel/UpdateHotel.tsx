@@ -1,12 +1,10 @@
-import { Box, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent } from '@mui/material';
 import React, { useState, useEffect } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
-import styled from 'styled-components';
-import { CustomButton } from '../../../../components'; // No se necesita CustomInput
-import { yupResolver } from '@hookform/resolvers/yup';
-import { UpdateFormSchema } from './schemas/update-schema';
 import { useAuth } from '../../../../context/AuthProvider';
-import { callEndpoint, getHotelInfoById, getHotels, getRoomsByHotel, updateHotel } from './services/call-endpoint';
+import { getHotelInfoById, getHotels, updateHotel } from './services/call-endpoint';
+import { Box, FormControl, InputLabel, MenuItem, Select } from '@mui/material';
+import styled from 'styled-components';
+import { CustomButton } from '../../../../components';
 
 export type UpdateHotelProps = {
     // types...
@@ -15,25 +13,25 @@ export type UpdateHotelProps = {
 const UpdateHotel: React.FC<UpdateHotelProps> = ({}) => {
     const [errorResponse, setErrorResponse] = useState("");
     const [selectedFiles, setSelectedFiles] = useState<FileList | null>(null);
-    const [rooms, setRooms] = useState<any[]>([]);
     const [hotelInfo, setHotelInfo] = useState<any>({
         name: '',
         place: '',
         address: '',
-        description: ''
+        description: '',
+        images: [],
+        availability:true
     });
     const [selectedHotel, setSelectedHotel] = useState<string>('');
     const [hotels, setHotels] = useState<any[]>([]);
+    const [rooms, setRooms] = useState<any[]>([]); 
 
     const {
         register,
         handleSubmit,
-        formState: { errors, isDirty, isValid },
+        formState: { errors },
         reset
     } = useForm({
-        defaultValues: {},
         mode: 'onChange',
-        resolver: yupResolver(UpdateFormSchema)
     });
 
     const auth = useAuth();
@@ -45,16 +43,6 @@ const UpdateHotel: React.FC<UpdateHotelProps> = ({}) => {
         }
     };
 
-    const addRoom = () => {
-        setRooms([...rooms, { roomType: '', capacity: '', price: '' }]);
-    }
-
-    const handleRoomChange = (index: number, field: string, value: string) => {
-        const updatedRooms = [...rooms];
-        updatedRooms[index][field] = value;
-        setRooms(updatedRooms);
-    }
-
     const fetchHotelInfo = async (hotelId: string) => {
         try {
             const hotelInfoData = await getHotelInfoById(hotelId);
@@ -65,32 +53,6 @@ const UpdateHotel: React.FC<UpdateHotelProps> = ({}) => {
         }
     };
 
-    useEffect(() => {
-        if (selectedHotel) {
-            fetchHotelInfo(selectedHotel);
-        }
-    }, [selectedHotel]);
-
-	const onSubmit = async (data: any) => {
-		try {
-			const hotelId = selectedHotel; // Obtén el ID del hotel seleccionado
-			const token = accessToken; // Obtén el token de autenticación
-			const updatedHotelInfo = { // Crea un objeto con la información actualizada del hotel
-				name: data.name,
-				place: data.place,
-				address: data.address,
-				description: data.description,
-				// Agrega cualquier otra información que necesites actualizar
-			};
-			// Llama a la función updateHotel con el ID del hotel, los datos actualizados y el token
-			await updateHotel(hotelId, updatedHotelInfo, token);
-			// Si la actualización es exitosa, puedes hacer cualquier otra lógica necesaria
-		} catch (error) {
-			setErrorResponse('Ha ocurrido un error al actualizar el hotel');
-			console.error('Error en la llamada a la API:', error);
-		}
-		reset();
-	};
     useEffect(() => {
         loadHotels();
     }, []);
@@ -108,6 +70,32 @@ const UpdateHotel: React.FC<UpdateHotelProps> = ({}) => {
     const handleHotelChange = (event: React.ChangeEvent<{ value: unknown }>) => {
         const hotelId = event.target.value as string;
         setSelectedHotel(hotelId);
+        setRooms([]);
+        fetchHotelInfo(hotelId);
+    };
+
+    const onSubmit = async (data: any) => {
+        console.log("data", data)
+        console.log("info", hotelInfo)
+        try {
+            const hotelId = selectedHotel;
+            const token = accessToken;
+            const updatedHotelInfo = {
+                name: hotelInfo.name,
+                place: hotelInfo.place,
+                address: hotelInfo.address,
+                description: hotelInfo.description,
+                availability:hotelInfo.availability
+            };
+
+            await updateHotel(hotelId, updatedHotelInfo, token);
+
+
+        } catch (error) {
+            setErrorResponse('Ha ocurrido un error al actualizar el hotel');
+            console.error('Error en la llamada a la API:', error);
+        }
+        reset();
     };
 
     return (
@@ -139,7 +127,17 @@ const UpdateHotel: React.FC<UpdateHotelProps> = ({}) => {
                                 ))}
                             </Select>
                         </FormControl>
-
+                        <h2>Imágenes del Hotel</h2>
+                        {hotelInfo.images && hotelInfo.images.map((imageUrl, index) => (
+                            <img key={index} src={imageUrl} alt={`Hotel Image ${index}`} style={{ maxWidth: '100px', maxHeight: '100px', marginRight: '10px' }} />
+                        ))}
+                       
+                        <input
+                            name="availability"
+                            type="checkbox"
+                            value={hotelInfo.availability}
+                        />
+                         <label>Habilitar</label>
                         <input
                             name="image"
                             type="file"
@@ -150,73 +148,37 @@ const UpdateHotel: React.FC<UpdateHotelProps> = ({}) => {
                             name="name"
                             placeholder="Nombre"
                             type="text"
-                            required
-                            defaultValue={hotelInfo.name}
+                            value={hotelInfo.name}
                             onChange={(e) => setHotelInfo({ ...hotelInfo, name: e.target.value })}
                         />
                         <input
                             name="place"
                             placeholder="Ciudad"
                             type="text"
-                            required
-                            defaultValue={hotelInfo.place}
+                            value={hotelInfo.place}
                             onChange={(e) => setHotelInfo({ ...hotelInfo, place: e.target.value })}
                         />
                         <input
                             name="address"
                             placeholder="Dirección"
                             type="text"
-                            required
-                            defaultValue={hotelInfo.address}
+                            value={hotelInfo.address}
                             onChange={(e) => setHotelInfo({ ...hotelInfo, address: e.target.value })}
                         />
                         <input
                             name="description"
                             placeholder="Descripción"
                             type="text"
-                            required
-                            defaultValue={hotelInfo.description}
+                            value={hotelInfo.description}
                             onChange={(e) => setHotelInfo({ ...hotelInfo, description: e.target.value })}
                         />
 
-                        <button type="button" onClick={addRoom}>Agregar Habitación</button>
-
-                        {rooms.map((room, index) => (
-                            <div key={index}>
-                                <h3>Habitación {index + 1}</h3>
-                                <input
-                                    name={`room[${index}][roomType]`}
-                                    placeholder="Tipo de Habitación"
-                                    type="text"
-                                    required
-                                    value={room.roomType}
-                                    onChange={(e) => handleRoomChange(index, 'roomType', e.target.value)}
-                                />
-                                <input
-                                    name={`room[${index}][capacity]`}
-                                    placeholder="Capacidad"
-                                    type="number"
-                                    required
-                                    value={room.capacity}
-                                    onChange={(e) => handleRoomChange(index, 'capacity', e.target.value)}
-                                />
-                                <input
-                                    name={`room[${index}][price]`}
-                                    placeholder="Precio"
-                                    type="number"
-                                    required
-                                    value={room.price}
-                                    onChange={(e) => handleRoomChange(index, 'price', e.target.value)}
-                                />
-                            </div>
-                        ))}
-
                         <CustomButton
-                            isDirty={isDirty}
-                            isValid={isValid}
+                            isDirty="true"
+                            isValid="true"
                             type="submit"
                         >
-                            Actualizar
+                            Crear Nuevo Hotel
                         </CustomButton>
                     </form>
                 </FormProvider>
@@ -225,6 +187,10 @@ const UpdateHotel: React.FC<UpdateHotelProps> = ({}) => {
     );
 };
 
-export const UpdateHotelStl = styled.div``;
+export const UpdateHotelStl = styled.div`
+    display: flex;
+    justify-content: center;
+    margin: 30px;
+`;
 
 export default UpdateHotel;
