@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { FormProvider, useForm , Resolver} from "react-hook-form";
+import { FormProvider, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import Layout from "../../layouts/Layout";
 import { useNavigate } from "react-router-dom";
@@ -15,30 +15,21 @@ export default function Signup() {
   const [errorResponse, setErrorResponse] = useState("");
   const auth = useAuth();
   const goTo = useNavigate();
+  interface SignUpFormData {
+    name: string;
+    username: string;
+    password: string;
+  }
 
-  const formDataToObject = (formData: FormData): { [key: string]: any } => {
-    const object: { [key: string]: any } = {};
-    formData.forEach((value, key) => {
-      object[key] = value;
-    });
-    return object;
-  };
-
-  const customYupResolver: Resolver<any> = async (formData, context, options) => {
-    const data = formDataToObject(formData);
-    return yupResolver(SignUpFormSchema)(data, context, options);
-  };
-
-  const methods = useForm<FormData>({
+  const methods = useForm<SignUpFormData>({
     mode: "onChange",
-    resolver: customYupResolver,
-  })
-
+    resolver: yupResolver(SignUpFormSchema),
+  });
 
   const { handleSubmit } = methods;
-  const { errors, isDirty, isValid } = methods.formState;
+  const {  isDirty, isValid } = methods.formState;
 
-  async function onSubmit(data: FormData) {
+  async function onSubmit(data: SignUpFormData) {
     try {
       const result = await callEndpoint(data);
       if (result) {

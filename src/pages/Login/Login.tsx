@@ -1,7 +1,5 @@
 import  { useState } from 'react';
-import { FormProvider, useForm, Resolver } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
-import { LoginFormSchema } from './schemas/login-form-schema';
+import { FormProvider, useForm} from 'react-hook-form';
 import { CustomInput } from '../../components/CustomInput';
 import { CustomButton } from '../../components/CustomButton';
 import { Box } from '@mui/material';
@@ -11,28 +9,23 @@ import { Navigate } from 'react-router-dom';
 import { callEndpoint } from './services/call-endpoint';
 import Layout from '../../layouts/Layout';
 import styled from 'styled-components';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { LoginFormSchema } from './schemas';
 
 
 export function Login() {
   const [errorResponse, setErrorResponse] = useState('');
 
-  const formDataToObject = (formData: FormData): { [key: string]: any } => {
-    const object: { [key: string]: any } = {};
-    formData.forEach((value, key) => {
-      object[key] = value;
-    });
-    return object;
-  };
+  interface LoginFormData {
+    username: string;
+    password: string;
+  }
 
-  const customYupResolver: Resolver<any> = async (formData, context, options) => {
-    const data = formDataToObject(formData);
-    return yupResolver(LoginFormSchema)(data, context, options);
-  };
-
-  const methods = useForm<FormData>({
+  const methods = useForm<LoginFormData>({
     mode: "onChange",
-    resolver: customYupResolver,
+    resolver: yupResolver(LoginFormSchema),
   });
+
 
   const { handleSubmit } = methods;
 
