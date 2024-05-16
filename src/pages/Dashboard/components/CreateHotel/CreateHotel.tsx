@@ -1,13 +1,12 @@
 import { Box } from '@mui/material';
 import React, { useState } from 'react';
-import { FormProvider, useForm, Resolver } from 'react-hook-form';
+import { FormProvider, useForm } from 'react-hook-form';
 import styled from 'styled-components';
 import { CustomButton, CustomInput } from '../../../../components';
-import { yupResolver } from '@hookform/resolvers/yup';
 import { callEndpoint } from './services/call-endpoint';
-import { CreateFormSchema } from './schemas/create-schema';
 import { useAuth } from '../../../../context/AuthProvider';
 import { addRoomsToHotel } from './services/addRooms-endpoint';
+
 
 
 export type CreateHotelProps = {
@@ -22,27 +21,15 @@ const CreateHotel: React.FC<CreateHotelProps> = ({}) => {
     const [formSubmitted, setFormSubmitted] = useState(false);
 
 
-    const formDataToObject = (formData: FormData): { [key: string]: any } => {
-        const object: { [key: string]: any } = {};
-        formData.forEach((value, key) => {
-          object[key] = value;
-        });
-        return object;
-      };
-    
-      const customYupResolver: Resolver<any> = async (formData, context, options) => {
-        const data = formDataToObject(formData);
-        return yupResolver(CreateFormSchema)(data, context, options);
-      };
     
       const methods = useForm<FormData>({
         mode: "onChange",
-        resolver: customYupResolver,
+
       })
 
     const { handleSubmit } = methods;
   
-    const { errors,isDirty, isValid } = methods.formState;
+    const {isDirty, isValid } = methods.formState;
     const auth = useAuth();
     const accessToken= auth.getAccessToken();
     

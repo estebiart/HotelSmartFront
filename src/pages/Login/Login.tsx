@@ -36,7 +36,7 @@ export function Login() {
 
   const { handleSubmit } = methods;
 
-  const { errors,isDirty, isValid } = methods.formState;
+  const { isDirty, isValid } = methods.formState;
   const auth = useAuth();
 
   const onSubmit = async (data:any) => {

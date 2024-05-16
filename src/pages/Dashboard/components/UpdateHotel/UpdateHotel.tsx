@@ -32,7 +32,6 @@ const UpdateHotel: React.FC<UpdateHotelProps> = ({}) => {
   
     const { handleSubmit } = methods;
   
-    const { errors,isDirty, isValid } = methods.formState;
 
     const auth = useAuth();
     const accessToken = auth.getAccessToken();

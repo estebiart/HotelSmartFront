@@ -12,29 +12,11 @@ import Autocomplete from '@mui/material/Autocomplete';
 import { SelectChangeEvent } from '@mui/material';
 
 
-
 type Room = {
+	_id:string;
     roomType: string;
     capacity: string;
     price: string;
-}
-
-type BookingFormData = {
-    names: string;
-    lastnames: string;
-    gender: string;
-    documentType: string;
-    documentNumber: string;
-    email: string;
-    number: string;
-    asociateName: string;
-    asociateNumber: string;
-    hotel: string; 
-    rooms: string[]; 
-	checkInDate: string; 
-    checkOutDate: string; 
-    numberOfPeople: number; 
-    destinationCity: string; 
 }
 
 const BookingForm: React.FC = () => {
@@ -50,7 +32,7 @@ const BookingForm: React.FC = () => {
   
 	const { handleSubmit } = methods;
   
-	const { errors,isDirty, isValid } = methods.formState;
+	const { isDirty, isValid } = methods.formState;
 	
 
     const auth = useAuth();
@@ -98,13 +80,6 @@ const BookingForm: React.FC = () => {
 	// 		throw new Error('Error sending email');
 	// 	}
 	// };
-	type Room = {
-		_id: string;
-		roomType: string;
-		capacity: string;
-		price: string;
-	}
-
 
     const onSubmit = async (data: FormData) => {
 		const selectedRoomId = rooms.find(room => room.roomType === selectedRoom)?._id || '';
@@ -269,7 +244,7 @@ const BookingForm: React.FC = () => {
 								id="room"
 								options={rooms.map((room) => room.roomType)}
 								value={selectedRoom}
-								onChange={(event, newValue) => setSelectedRoom(newValue as string)}
+								onChange={(_,newValue) => setSelectedRoom(newValue as string)}
 								renderInput={(params) => <TextField {...params} label="Room" />}
 							/>
 							</FormControl>							

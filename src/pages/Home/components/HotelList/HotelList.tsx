@@ -86,7 +86,7 @@ const HotelList: React.FC<HotelListProps> = ({}) => {
             <Pagination
                 count={Math.ceil(filteredHotels.length / hotelsPerPage)}
                 page={page}
-                onChange={(event, value) => setPage(value)}
+                onChange={(_, value) => setPage(value)}
             />
         </HotelListStl>
     );

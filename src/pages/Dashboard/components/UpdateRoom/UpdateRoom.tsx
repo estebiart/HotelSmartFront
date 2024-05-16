@@ -60,8 +60,6 @@ const UpdateRoom: React.FC<UpdateRoomProps> = ({}) => {
   
     const { handleSubmit } = methods;
   
-    const { errors,isDirty, isValid } = methods.formState;
-
 
     const loadRooms = async (hotelId: string) => {
         try {
