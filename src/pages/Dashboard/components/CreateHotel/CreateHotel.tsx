@@ -1,10 +1,9 @@
 import { Box } from '@mui/material';
 import React, { useState } from 'react';
-import { FormProvider, useForm } from 'react-hook-form';
+import { FormProvider, useForm, Resolver } from 'react-hook-form';
 import styled from 'styled-components';
 import { CustomButton, CustomInput } from '../../../../components';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { AuthResponse } from '../../../../models/types';
 import { callEndpoint } from './services/call-endpoint';
 import { CreateFormSchema } from './schemas/create-schema';
 import { useAuth } from '../../../../context/AuthProvider';
@@ -22,22 +21,28 @@ const CreateHotel: React.FC<CreateHotelProps> = ({}) => {
     const [rooms, setRooms] = useState<any[]>([]);
     const [formSubmitted, setFormSubmitted] = useState(false);
 
-    const {
-        register,
-        handleSubmit,
-        formState: { errors, isDirty, isValid },
-        reset
-    } = useForm({
-        defaultValues: {
-            name: '',
-            place: '',
-            address: '',
-            description: ''
-        },
-        mode: 'onChange',
-        resolver: yupResolver(CreateFormSchema)
-    });
 
+    const formDataToObject = (formData: FormData): { [key: string]: any } => {
+        const object: { [key: string]: any } = {};
+        formData.forEach((value, key) => {
+          object[key] = value;
+        });
+        return object;
+      };
+    
+      const customYupResolver: Resolver<any> = async (formData, context, options) => {
+        const data = formDataToObject(formData);
+        return yupResolver(CreateFormSchema)(data, context, options);
+      };
+    
+      const methods = useForm<FormData>({
+        mode: "onChange",
+        resolver: customYupResolver,
+      })
+
+    const { handleSubmit } = methods;
+  
+    const { errors,isDirty, isValid } = methods.formState;
     const auth = useAuth();
     const accessToken= auth.getAccessToken();
     
@@ -94,7 +99,7 @@ const CreateHotel: React.FC<CreateHotelProps> = ({}) => {
             setErrorResponse('Ha ocurrido un error al crear hotel');
             console.error('Error en la llamada a la API:', error);
         }
-        reset();
+        methods.reset();
     };
 
     return (
@@ -107,7 +112,7 @@ const CreateHotel: React.FC<CreateHotelProps> = ({}) => {
                     width: '50%'
                 }}
             >
-                <FormProvider {...{ register, errors }}>
+                <FormProvider {...methods}>
                     <form onSubmit={handleSubmit(onSubmit)} className={`form ${formSubmitted ? 'hidden' : ''}`}  encType="multipart/form-data">
                         <h2>Registro de nuevo Hotel</h2>
                         {!!errorResponse && (

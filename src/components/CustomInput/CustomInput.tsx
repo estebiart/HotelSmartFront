@@ -1,5 +1,5 @@
 import { TextField, Typography } from '@mui/material';
-import { useFormContext, UseFormReturn, FieldValues, FieldError } from 'react-hook-form'; 
+import { useFormContext, UseFormReturn, FieldValues, FieldError, FieldErrorsImpl, FieldErrors } from 'react-hook-form'; 
 import styled from 'styled-components';
 
 interface CustomInputProps {
@@ -15,7 +15,7 @@ interface CustomInputProps {
 export const CustomInput: React.FC<CustomInputProps> = ({ name = '', label = '', type = 'text', disabled = false, required = false, multiple = false, defaultValue = '' }) => {
 
     const { register, formState }: UseFormReturn<FieldValues> = useFormContext();
-    const error = formState?.errors?.[name];
+    const error: FieldError | FieldErrorsImpl<any> | undefined = formState?.errors?.[name];
 
     return (
         <CustomInputStl>
@@ -35,7 +35,11 @@ export const CustomInput: React.FC<CustomInputProps> = ({ name = '', label = '',
                         multiple: multiple ? 'multiple' : undefined,
                     }}
                 />
-               {error && <Typography color="red">{error.message}</Typography>}
+                {error && (
+                    <Typography color="red">
+                        {(error as FieldError)?.message}
+                    </Typography>
+                )}
             </div>
         </CustomInputStl>
     );
@@ -44,3 +48,4 @@ export const CustomInput: React.FC<CustomInputProps> = ({ name = '', label = '',
 const CustomInputStl = styled.div`
      margin: 30px 0;
 `;
+export default CustomInput;

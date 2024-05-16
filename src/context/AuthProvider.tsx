@@ -36,6 +36,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
  * model to response
  */
   function saveUser(userData: AuthResponse) {
+    console.log("userData",userData);
     setAccessTokenAndRefreshToken(
       userData.body.accessToken,
       userData.body.refreshToken
@@ -48,6 +49,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     accessToken: string,
     refreshToken: string
   ) {
+    console.log("refreshTokenno",refreshToken)
     setAccessToken(accessToken);
     setRefreshToken(refreshToken);
 

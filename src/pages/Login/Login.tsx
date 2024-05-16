@@ -1,5 +1,5 @@
 import  { useState } from 'react';
-import { FormProvider, useForm } from 'react-hook-form';
+import { FormProvider, useForm, Resolver } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { LoginFormSchema } from './schemas/login-form-schema';
 import { CustomInput } from '../../components/CustomInput';
@@ -12,24 +12,31 @@ import { callEndpoint } from './services/call-endpoint';
 import Layout from '../../layouts/Layout';
 import styled from 'styled-components';
 
+
 export function Login() {
   const [errorResponse, setErrorResponse] = useState('');
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors, isDirty, isValid },
-    reset
-  } = useForm({
-    defaultValues: {
-      username: '',
-      password: ''
-    },
-    mode: 'onChange',
-    resolver: yupResolver(LoginFormSchema)
+  const formDataToObject = (formData: FormData): { [key: string]: any } => {
+    const object: { [key: string]: any } = {};
+    formData.forEach((value, key) => {
+      object[key] = value;
+    });
+    return object;
+  };
+
+  const customYupResolver: Resolver<any> = async (formData, context, options) => {
+    const data = formDataToObject(formData);
+    return yupResolver(LoginFormSchema)(data, context, options);
+  };
+
+  const methods = useForm<FormData>({
+    mode: "onChange",
+    resolver: customYupResolver,
   });
 
+  const { handleSubmit } = methods;
 
+  const { errors,isDirty, isValid } = methods.formState;
   const auth = useAuth();
 
   const onSubmit = async (data:any) => {
@@ -50,7 +57,7 @@ export function Login() {
       setErrorResponse('Usuario o Contraseña no existen');
       console.log(error);
     }
-    reset();
+    methods.reset();
   };
 
   if (auth.isAuthenticated) {
@@ -71,7 +78,7 @@ export function Login() {
         }}
       >
         <h1>Ingresa a tu Dashboard</h1>
-        <FormProvider {...{ register, errors }}>
+        <FormProvider {...methods}>
           <form onSubmit={handleSubmit(onSubmit)}>
               <div className="errorMessage">{errorResponse}</div>
             <CustomInput name="username" label="Nombre de Usuario" required />

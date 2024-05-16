@@ -1,8 +1,8 @@
-import  { useState } from "react";
-import { FormProvider, useForm } from "react-hook-form";
+import { useState } from "react";
+import { FormProvider, useForm , Resolver} from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import Layout from "../../layouts/Layout";
-import {  useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { AuthResponse } from "../../models/types";
 import { useAuth } from "../../context/AuthProvider";
 import { CustomButton, CustomInput } from "../../components";
@@ -16,33 +16,36 @@ export default function Signup() {
   const auth = useAuth();
   const goTo = useNavigate();
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors, isDirty, isValid },
-    reset,
-  } = useForm({
-    defaultValues: {
-      name: "",
-      username: "",
-      password: "",
-    },
+  const formDataToObject = (formData: FormData): { [key: string]: any } => {
+    const object: { [key: string]: any } = {};
+    formData.forEach((value, key) => {
+      object[key] = value;
+    });
+    return object;
+  };
+
+  const customYupResolver: Resolver<any> = async (formData, context, options) => {
+    const data = formDataToObject(formData);
+    return yupResolver(SignUpFormSchema)(data, context, options);
+  };
+
+  const methods = useForm<FormData>({
     mode: "onChange",
-    resolver: yupResolver(SignUpFormSchema), 
-  });
-  interface FormData {
-    name: string;
-    username: string;
-    password: string;
-  }
+    resolver: customYupResolver,
+  })
+
+
+  const { handleSubmit } = methods;
+  const { errors, isDirty, isValid } = methods.formState;
+
   async function onSubmit(data: FormData) {
     try {
-      const result = await callEndpoint(data); 
+      const result = await callEndpoint(data);
       if (result) {
-        const json = result as AuthResponse; 
-          auth.saveUser(json);
-          goTo("/"); 
-          return;
+        const json = result as AuthResponse;
+        auth.saveUser(json);
+        goTo("/");
+        return;
       } else {
         setErrorResponse('Error al llamar al endpoint');
       }
@@ -50,10 +53,8 @@ export default function Signup() {
       setErrorResponse('Intente con otro nombre de Usuario');
       console.log(error);
     }
-    reset();
+    methods.reset();
   }
-
-
 
   return (
     <Layout>
@@ -66,7 +67,7 @@ export default function Signup() {
             width: '50%'
           }}
         >
-          <FormProvider {...{ register, errors }}>
+          <FormProvider {...methods}>
             <form onSubmit={handleSubmit(onSubmit)} className="form">
               <h1>Registro</h1>
               {!!errorResponse && (
@@ -91,8 +92,8 @@ export default function Signup() {
                 required
               />
               <CustomButton
-                isDirty={isDirty} 
-                isValid={isValid} 
+                isDirty={isDirty}
+                isValid={isValid}
                 type="submit"
               >
                 Crear Cuenta
@@ -104,6 +105,7 @@ export default function Signup() {
     </Layout>
   );
 }
+
 export const SignUpStl = styled.div`
   height:100vh;
   display:flex;

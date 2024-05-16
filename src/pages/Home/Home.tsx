@@ -1,7 +1,7 @@
 "use client";
 
 // import { addHotel } from '@/redux/states';
-import React, { useEffect } from 'react';
+import React from 'react';
 // import { useDispatch } from 'react-redux';
 import Layout from '../../layouts/Layout';
 import { LayoutContainer } from '../../styled-components';

@@ -34,7 +34,7 @@ export const getHotelInfoById = async (hotelId: string) => {
 
 
 
-export async function getRoomsForHotel(hotelId) {
+export async function getRoomsForHotel(hotelId:string) {
     try {
       console.log("hotelId",hotelId);
         const response = await axios.get(`${API_URL}/hotels/${hotelId}/rooms`);
@@ -46,7 +46,7 @@ export async function getRoomsForHotel(hotelId) {
     }
 }
 
-export async function updateRoom(hotelId, roomId, updatedRoomInfo, token) {
+export async function updateRoom(hotelId:string, roomId:number, updatedRoomInfo:any, token:string |void) {
   try {
       const response = await axios.put(`${API_URL}/hotels/${hotelId}/rooms/${roomId}`, updatedRoomInfo, {
           headers: {

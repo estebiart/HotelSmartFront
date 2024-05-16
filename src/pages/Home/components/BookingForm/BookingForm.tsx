@@ -9,6 +9,8 @@ import { callEndpoint, getHotels, getRoomsByHotel  } from './services/booking-en
 import { Hotel } from '../../../../models';
 import Autocomplete from '@mui/material/Autocomplete';
 // import transporter from './services/mailer';
+import { SelectChangeEvent } from '@mui/material';
+
 
 
 type Room = {
@@ -41,31 +43,15 @@ const BookingForm: React.FC = () => {
 	const [rooms, setRooms] = useState<Room[]>([]);
     const [selectedHotel, setSelectedHotel] = useState<string>('');
     const [selectedRoom, setSelectedRoom] = useState<string>('');
-    const {
-        register,
-        handleSubmit,
-        formState: { errors, isDirty, isValid },
-        reset
-    } = useForm<BookingFormData>({
-        defaultValues: {
-            names: '',
-            lastnames: '',
-            gender: '',
-            documentType: '',
-            documentNumber: '',
-            email: '',
-            number: '',
-            asociateName: '',
-            asociateNumber: '',
-            hotel: '', 
-            rooms: [],
-			checkInDate: '',
-			checkOutDate: '',
-			numberOfPeople: 0,
-			destinationCity: '', 
-        },
-        mode: 'onChange'
-    });
+
+	const methods = useForm<FormData>({
+	  mode: "onChange",
+	});
+  
+	const { handleSubmit } = methods;
+  
+	const { errors,isDirty, isValid } = methods.formState;
+	
 
     const auth = useAuth();
     const accessToken= auth.getAccessToken();
@@ -84,7 +70,7 @@ const BookingForm: React.FC = () => {
         }
     };
 
-    const handleHotelChange = async (event: React.ChangeEvent<{ value: unknown }>) => {
+    const handleHotelChange = async (event: SelectChangeEvent<string>) => {
         const hotelId = event.target.value as string;
         setSelectedHotel(hotelId);
         try {
@@ -112,9 +98,15 @@ const BookingForm: React.FC = () => {
 	// 		throw new Error('Error sending email');
 	// 	}
 	// };
-	
+	type Room = {
+		_id: string;
+		roomType: string;
+		capacity: string;
+		price: string;
+	}
 
-    const onSubmit = async (data: BookingFormData) => {
+
+    const onSubmit = async (data: FormData) => {
 		const selectedRoomId = rooms.find(room => room.roomType === selectedRoom)?._id || '';
         try {
 			const result = await callEndpoint({
@@ -133,8 +125,10 @@ const BookingForm: React.FC = () => {
             setErrorResponse('Ha ocurrido un error al realizar la reserva');
             console.error('Error en la llamada a la API:', error);
         }
-        reset(); 
+		methods.reset();
     };
+
+
 
 	return (
 		<BookingFormWrapper>
@@ -146,7 +140,7 @@ const BookingForm: React.FC = () => {
 					width: '50%'
 				}}
 			>
-				<FormProvider {...{ register, errors }}>
+				<FormProvider {...methods}>
 					<form onSubmit={handleSubmit(onSubmit)}>
 						<h2>Reserva de Hotel</h2>
 						{!!errorResponse && (

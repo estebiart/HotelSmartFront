@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useAuth } from '../../../../context/AuthProvider';
-import { getHotelInfoById, getHotels, getRoomsForHotel, updateRoom } from './services/call-endpoint'; 
+import {  getHotels, getRoomsForHotel, updateRoom } from './services/call-endpoint'; 
 import { Box, FormControl, InputLabel, MenuItem, Select } from '@mui/material';
 import styled from 'styled-components';
 import { CustomButton } from '../../../../components';
+import { SelectChangeEvent } from '@mui/material';
 
 export type UpdateRoomProps = {
     // tipos...
@@ -53,14 +54,13 @@ const UpdateRoom: React.FC<UpdateRoomProps> = ({}) => {
     const auth = useAuth();
     const accessToken = auth.getAccessToken();
 
-    const {
-        register,
-        handleSubmit,
-        formState: { errors },
-        reset
-    } = useForm({
-        mode: 'onChange',
+    const methods = useForm<FormData>({
+      mode: "onChange",
     });
+  
+    const { handleSubmit } = methods;
+  
+    const { errors,isDirty, isValid } = methods.formState;
 
 
     const loadRooms = async (hotelId: string) => {
@@ -88,32 +88,33 @@ const UpdateRoom: React.FC<UpdateRoomProps> = ({}) => {
         }
     };
 
-    const handleHotelChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+    const handleHotelChange = (event: SelectChangeEvent<string>) => {
         const hotelId = event.target.value as string;
         setSelectedHotel(hotelId);
         setRooms([]);
         loadRooms(hotelId);
     };
 
-    const onSubmit = async (data: any) => {
-        console.log("data", data)
-        console.log("info", selectedRoom) 
+    const onSubmit = async () => {
         try {
-			const { hotel, _id } = selectedRoom;
-            const token = accessToken;
-            const updatedRoomInfo = {
-				roomType: room.roomType,
-				capacity: room.capacity,
-				price: room.price,
-				availability: room.availability
-            };
-
-			await updateRoom(hotel, _id, updatedRoomInfo, token);
+            if (selectedRoom && selectedRoom.hotel) {
+                const { hotel, _id } = selectedRoom;
+                const token = accessToken;
+                const updatedRoomInfo = {
+                    roomType: room.roomType,
+                    capacity: room.capacity,
+                    price: room.price,
+                    availability: room.availability
+                };
+                await updateRoom(hotel, _id, updatedRoomInfo, token);
+            } else {
+                throw new Error('Hotel no seleccionado');
+            }
         } catch (error) {
             setErrorResponse('Ha ocurrido un error al actualizar la habitación');
             console.error('Error en la llamada a la API:', error);
         }
-        reset();
+        methods.reset();
     };
 
     return (
@@ -126,7 +127,7 @@ const UpdateRoom: React.FC<UpdateRoomProps> = ({}) => {
                     width: '50%'
                 }}
             >
-                <FormProvider {...{ register, errors }}>
+                <FormProvider {...methods}>
                     <form onSubmit={handleSubmit(onSubmit)} className="form" encType="multipart/form-data">
                         <h2>Actualizar Habitación</h2>
                         {!!errorResponse && (
@@ -205,8 +206,8 @@ const UpdateRoom: React.FC<UpdateRoomProps> = ({}) => {
 
 
                         <CustomButton
-                            isDirty="true"
-                            isValid="true"
+                            isDirty={true}
+                            isValid={true}
                             type="submit"
                         >
                             Actualizar Habitación

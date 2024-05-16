@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { Pagination, TextField, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
+import { Pagination, TextField, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
 import { callEndpoint, getHotelName, getRoomNames } from './services/booking-list-endpoint';
 import SearchIcon from '@mui/icons-material/Search';
 import { useAuth } from '../../../../context/AuthProvider';
@@ -19,6 +19,20 @@ const BookingList: React.FC<BookingListProps> = ({}) => {
     const [filter, setFilter] = useState('');
     const auth = useAuth();
     const accessToken = auth.getAccessToken();
+    interface Booking {
+        _id: string;
+        hotel: string;
+        rooms: string[]; 
+        names: string;
+        lastnames: string;
+        birthdate: string;
+        gender: string;
+        documentType: string;
+        documentNumber: string;
+        email: string;
+        number: string;
+    }
+    
 
     useEffect(() => {
         async function fetchData() {
@@ -36,7 +50,7 @@ const BookingList: React.FC<BookingListProps> = ({}) => {
         setFilter(value);
     };
 
-    const fetchHotelAndRoomData = async (booking) => {
+    const fetchHotelAndRoomData = async (booking: Booking) => {
         try {
             const hotelName = await getHotelName(booking.hotel, accessToken);
             const roomNames = await getRoomNames(booking.rooms, booking.hotel, accessToken);
@@ -122,7 +136,7 @@ const BookingList: React.FC<BookingListProps> = ({}) => {
             <Pagination
                 count={Math.ceil(bookings.length / bookingsPerPage)}
                 page={page}
-                onChange={(event, value) => setPage(value)}
+                onChange={(_, value) => setPage(value)} 
             />
         </BookingListStl>
     );

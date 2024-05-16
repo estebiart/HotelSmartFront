@@ -1,5 +1,5 @@
-import { LocalStorageTypes, Hotel } from '@/models';
-import { getLocalStorage, setLocalStorage } from '@/utilities';
+import { LocalStorageTypes, Hotel } from '../../models';
+import { getLocalStorage, setLocalStorage } from '../../utilities';
 import { createSlice} from '@reduxjs/toolkit'
 
 const initialState: Hotel[] =[];

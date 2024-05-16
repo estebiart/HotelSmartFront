@@ -12,7 +12,7 @@ import { styled } from '@mui/material/styles';
 import Fab from '@mui/material/Fab';
 import { Link } from "react-router-dom";
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
-import { useAuth } from "../../context/AuthProvider";
+ import { useAuth } from "../../context/AuthProvider";
 import  API_URL  from "../../context/authConstants";
 
 
@@ -28,7 +28,7 @@ const StyledFab = styled(Fab)({
 	margin: '0 auto',
   });
 const Navbar: React.FC<NavbarProps>  = ({layoutType}) => {
-	const auth = useAuth();
+	 const auth = useAuth();
 	const theme = useTheme();
 	const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   

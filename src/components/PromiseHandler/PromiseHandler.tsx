@@ -1,4 +1,4 @@
-import { useState, useEffect, ReactNode, SetStateAction } from 'react';
+import { useState, useEffect, ReactNode } from 'react';
 
 type PromiseFunction<T> = () => Promise<T>;
 type PromiseHandlerProps<T> = {

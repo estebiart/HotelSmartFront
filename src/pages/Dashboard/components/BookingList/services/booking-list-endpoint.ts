@@ -30,9 +30,9 @@ export async function getHotelName(hotelId: string, token: any) {
 }
 
 
-export async function getRoomNames(roomIds: string[], hotelId: string, token: string) {
+export async function getRoomNames(roomIds: string[], hotelId: string, token: string | void) {
   try {
-    const roomTypes = await Promise.all(roomIds.map(async (roomId) => {
+    const roomTypes = await Promise.all(roomIds.map(async () => {
       const response = await axios.get(`${API_URL}/hotels/${hotelId}/rooms`, {
         headers: {
           Authorization: `Bearer ${token}`,

@@ -1,4 +1,4 @@
- import { Hotel} from "@/models/Hotel";
+ import { Hotel} from "../models";
  import { configureStore } from '@reduxjs/toolkit'
 import { favoritesSlice, hotelSlice } from "./states";
 

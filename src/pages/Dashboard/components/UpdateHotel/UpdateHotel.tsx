@@ -4,6 +4,7 @@ import { useAuth } from '../../../../context/AuthProvider';
 import { getHotelInfoById, getHotels, updateHotel } from './services/call-endpoint';
 import { Box, FormControl, InputLabel, MenuItem, Select } from '@mui/material';
 import styled from 'styled-components';
+import { SelectChangeEvent } from '@mui/material';
 import { CustomButton } from '../../../../components';
 
 export type UpdateHotelProps = {
@@ -12,7 +13,6 @@ export type UpdateHotelProps = {
 
 const UpdateHotel: React.FC<UpdateHotelProps> = ({}) => {
     const [errorResponse, setErrorResponse] = useState("");
-    const [selectedFiles, setSelectedFiles] = useState<FileList | null>(null);
     const [hotelInfo, setHotelInfo] = useState<any>({
         name: '',
         place: '',
@@ -23,25 +23,25 @@ const UpdateHotel: React.FC<UpdateHotelProps> = ({}) => {
     });
     const [selectedHotel, setSelectedHotel] = useState<string>('');
     const [hotels, setHotels] = useState<any[]>([]);
-    const [rooms, setRooms] = useState<any[]>([]); 
 
-    const {
-        register,
-        handleSubmit,
-        formState: { errors },
-        reset
-    } = useForm({
-        mode: 'onChange',
+
+
+    const methods = useForm<FormData>({
+      mode: "onChange",
     });
+  
+    const { handleSubmit } = methods;
+  
+    const { errors,isDirty, isValid } = methods.formState;
 
     const auth = useAuth();
     const accessToken = auth.getAccessToken();
 
-    const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        if (event.target.files) {
-            setSelectedFiles(event.target.files);
-        }
-    };
+    // const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    //     if (event.target.files) {
+    //         setSelectedFiles(event.target.files);
+    //     }
+    // };
 
     const fetchHotelInfo = async (hotelId: string) => {
         try {
@@ -67,16 +67,14 @@ const UpdateHotel: React.FC<UpdateHotelProps> = ({}) => {
         }
     };
 
-    const handleHotelChange = (event: React.ChangeEvent<{ value: unknown }>) => {
-        const hotelId = event.target.value as string;
+    const handleHotelChange = (event: SelectChangeEvent<string>) => {
+        const hotelId = event.target.value;
         setSelectedHotel(hotelId);
-        setRooms([]);
         fetchHotelInfo(hotelId);
     };
 
-    const onSubmit = async (data: any) => {
-        console.log("data", data)
-        console.log("info", hotelInfo)
+    const onSubmit = async () => {
+
         try {
             const hotelId = selectedHotel;
             const token = accessToken;
@@ -95,7 +93,7 @@ const UpdateHotel: React.FC<UpdateHotelProps> = ({}) => {
             setErrorResponse('Ha ocurrido un error al actualizar el hotel');
             console.error('Error en la llamada a la API:', error);
         }
-        reset();
+        methods.reset();
     };
 
     return (
@@ -108,7 +106,7 @@ const UpdateHotel: React.FC<UpdateHotelProps> = ({}) => {
                     width: '50%'
                 }}
             >
-                <FormProvider {...{ register, errors }}>
+                <FormProvider {...methods}>
                     <form onSubmit={handleSubmit(onSubmit)} className="form" encType="multipart/form-data">
                         <h2>Actualizar Hotel</h2>
                         {!!errorResponse && (
@@ -128,7 +126,7 @@ const UpdateHotel: React.FC<UpdateHotelProps> = ({}) => {
                             </Select>
                         </FormControl>
                         <h2>Imágenes del Hotel</h2>
-                        {hotelInfo.images && hotelInfo.images.map((imageUrl, index) => (
+                        {hotelInfo.images && hotelInfo.images.map((imageUrl:string, index:number) => (
                             <img key={index} src={imageUrl} alt={`Hotel Image ${index}`} style={{ maxWidth: '100px', maxHeight: '100px', marginRight: '10px' }} />
                         ))}
                        
@@ -142,7 +140,7 @@ const UpdateHotel: React.FC<UpdateHotelProps> = ({}) => {
                             name="image"
                             type="file"
                             multiple
-                            onChange={handleFileChange}
+                            // onChange={handleFileChange}
                         />
                         <input
                             name="name"
@@ -174,8 +172,8 @@ const UpdateHotel: React.FC<UpdateHotelProps> = ({}) => {
                         />
 
                         <CustomButton
-                            isDirty="true"
-                            isValid="true"
+                            isDirty={true}
+                            isValid={true}
                             type="submit"
                         >
                             Crear Nuevo Hotel
