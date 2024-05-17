@@ -121,15 +121,17 @@ const BookingForm: React.FC = () => {
 						{!!errorResponse && (
 							<div className="errorMessage">{errorResponse}</div>
 						)}
+						<label>Fecha de Entrada al Alojamiento</label>
 						<CustomInput
 						name="checkInDate"
-						label="Fecha de Entrada al Alojamiento"
+						label=""
 						type="date"
 						required
 						/>
+						<label>Fecha de Salida del Alojamiento</label>
 						<CustomInput
 							name="checkOutDate"
-							label="Fecha de Salida del Alojamiento"
+							label=""
 							type="date"
 							required
 						/>

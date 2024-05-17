@@ -1,5 +1,3 @@
-// En el componente BookingList
-
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { Pagination, TextField, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
@@ -7,6 +5,8 @@ import { callEndpoint, getHotelName, getRoomNames } from './services/booking-lis
 import SearchIcon from '@mui/icons-material/Search';
 import { useAuth } from '../../../../context/AuthProvider';
 import { PromiseHandler } from '../../../../components/PromiseHandler';
+import AOS from 'aos';
+import 'aos/dist/aos.css';
 
 
 export type BookingListProps = {
@@ -14,6 +14,9 @@ export type BookingListProps = {
 }
 
 const BookingList: React.FC<BookingListProps> = ({}) => {
+    useEffect(() => {
+        AOS.init();
+      }, [])
     const [bookings, setBookings] = useState<any[]>([]);
     const [page, setPage] = useState(1);
     const [filter, setFilter] = useState('');
@@ -67,7 +70,7 @@ const BookingList: React.FC<BookingListProps> = ({}) => {
     const currentBookings = bookings.slice(indexOfFirstBooking, indexOfLastBooking);
 
     return (
-        <BookingListStl>
+        <BookingListStl data-aos="fade-up">
             <div className='search'>
                 <div className='search__description'>
                     <h3>Reservas</h3>

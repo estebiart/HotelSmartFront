@@ -5,12 +5,17 @@ import { callEndpoint } from './services/hotels-list-endpoint';
 import { HotelCard } from '../HotelCard';
 import SearchIcon from '@mui/icons-material/Search';
 import { styled as styledMui, alpha } from '@mui/material/styles';
+import AOS from 'aos';
+import 'aos/dist/aos.css';
 
 export type HotelListProps = {
 
 }
 
 const HotelList: React.FC<HotelListProps> = ({}) => {
+    useEffect(() => {
+        AOS.init();
+      }, [])
     const [hotels, setHotels] = useState<any[]>([]);
     const [page, setPage] = useState(1);
     const [filter, setFilter] = useState('');

@@ -1,11 +1,13 @@
 import { Box } from '@mui/material';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import styled from 'styled-components';
 import { CustomButton, CustomInput } from '../../../../components';
 import { callEndpoint } from './services/call-endpoint';
 import { useAuth } from '../../../../context/AuthProvider';
 import { addRoomsToHotel } from './services/addRooms-endpoint';
+import AOS from 'aos';
+import 'aos/dist/aos.css';
 
 
 
@@ -14,6 +16,9 @@ export type CreateHotelProps = {
 }
 
 const CreateHotel: React.FC<CreateHotelProps> = ({}) => {
+    useEffect(() => {
+        AOS.init();
+      }, [])
     const [errorResponse, setErrorResponse] = useState("");
     const [successMessage, setSuccessMessage] = useState("");
     const [selectedFiles, setSelectedFiles] = useState<FileList | null>(null);
@@ -90,7 +95,7 @@ const CreateHotel: React.FC<CreateHotelProps> = ({}) => {
     };
 
     return (
-        <CreateHotelStl>
+        <CreateHotelStl data-aos="fade-up">
             <Box
                 sx={{
                     bgcolor: 'grey.300',

@@ -1,12 +1,19 @@
 "use client";
-import React from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
+import AOS from 'aos';
+import 'aos/dist/aos.css';
+
 export type BannerHomeProps = {
 }
 
 const BannerHome: React.FC<BannerHomeProps>  = ({}) => {
+  useEffect(() => {
+    AOS.init();
+  }, [])
+  
 	return (
-		<BannerHomeStl>
+		<BannerHomeStl data-aos="fade-up">
 			<div className="blocks">
 				<div className="block">
 					<a href="#link">

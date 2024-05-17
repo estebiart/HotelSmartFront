@@ -167,7 +167,7 @@ const UpdateRoom: React.FC<UpdateRoomProps> = ({}) => {
                     
 					
 						<FormControl fullWidth>
-							<InputLabel id="room-label">Tipo de Habitación</InputLabel>
+							<label id="room-label">Tipo de Habitación</label>
 							<input
 								name="roomType"
 								placeholder="Tipo de Habitación"
@@ -179,7 +179,7 @@ const UpdateRoom: React.FC<UpdateRoomProps> = ({}) => {
 						</FormControl>
 							
 								<FormControl fullWidth>
-								<InputLabel id="capacity-label">Capacidad</InputLabel>
+								<label id="capacity-label">Capacidad</label>
 								<input
 									name="capacity"
 									placeholder="Capacidad"
@@ -191,7 +191,7 @@ const UpdateRoom: React.FC<UpdateRoomProps> = ({}) => {
 								</FormControl>
 
 								<FormControl fullWidth>
-								<InputLabel id="price-label">Precio</InputLabel>
+								<label id="price-label">Precio</label>
 								<input
 									name="price"
 									placeholder="Precio"
@@ -221,6 +221,26 @@ export const UpdateRoomStl = styled.div`
     display: flex;
     justify-content: center;
     margin: 30px;
+    input{
+        font: inherit;
+        letter-spacing: inherit;
+        color: currentcolor;
+        border: 0px;
+        box-sizing: content-box;
+        background: none;
+        height: 1.4375em;
+        margin: 0px;
+        -webkit-tap-highlight-color: transparent;
+        display: block;
+        min-width: 0px;
+        width: 100%;
+        animation-name: mui-auto-fill-cancel;
+        animation-duration: 10ms;
+        padding: 16.5px 14px;
+    }
+    .MuiFormControl-root{
+        margin: 10px
+    }
 `;
 
 export default UpdateRoom;
