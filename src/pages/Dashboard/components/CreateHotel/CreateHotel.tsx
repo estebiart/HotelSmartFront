@@ -67,7 +67,7 @@ const CreateHotel: React.FC<CreateHotelProps> = ({}) => {
 
             if (selectedFiles) {
                 for (let i = 0; i < selectedFiles.length; i++) {
-                    formData.append('image', selectedFiles[i]);
+                    formData.append('images', selectedFiles[i]);
                 }
             }
             
@@ -111,7 +111,7 @@ const CreateHotel: React.FC<CreateHotelProps> = ({}) => {
                             <div className="errorMessage">{errorResponse}</div>
                         )}
                         <input
-                            name="image"
+                            name="images"
                             type="file"
                             multiple
                             onChange={handleFileChange} 

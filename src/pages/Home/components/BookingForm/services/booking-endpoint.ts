@@ -2,7 +2,6 @@ import axios from 'axios';
 import API_URL from '../../../../../context/authConstants';
 
 export async function callEndpoint(data:any, token:any) {
-  console.log("data",data);
   try {
     const response = await axios.post(`${API_URL}/booking`, data, {
       headers: {

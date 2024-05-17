@@ -23,7 +23,6 @@ export const getRoomsByHotel = async (hotelId: string) => {
 export const getHotelInfoById = async (hotelId: string) => {
   try {
       const response = await axios.get(`${API_URL}/hotels/${hotelId}`); 
-      console.log("response ",response )
       return response.data;
   } catch (error) {
       throw new Error('Error fetching hotel information');

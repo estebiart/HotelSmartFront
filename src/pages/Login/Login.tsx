@@ -35,7 +35,6 @@ export function Login() {
   const onSubmit = async (data:any) => {
     try {
       const result = await callEndpoint(data); 
-      console.log(result);
 
       if (result) {
         const json = result as AuthResponse; 
